@@ -223,6 +223,7 @@ class _SpeedCalculatorScreenState extends State<SpeedCalculatorScreen>
             ),
             child: TabBar(
               controller: _tabController,
+              labelPadding: const EdgeInsets.symmetric(horizontal: 4),
               indicatorSize: TabBarIndicatorSize.tab, // Fills the entire segment box!
               indicator: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -230,11 +231,11 @@ class _SpeedCalculatorScreenState extends State<SpeedCalculatorScreen>
               ),
               labelColor: Colors.white,
               unselectedLabelColor: const Color(0xFF94A3B8),
-              labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
               tabs: const [
-                Tab(text: 'Find Speed'),
-                Tab(text: 'Find Distance'),
-                Tab(text: 'Find Time'),
+                Tab(child: FittedBox(fit: BoxFit.scaleDown, child: Text('Find Speed', maxLines: 1))),
+                Tab(child: FittedBox(fit: BoxFit.scaleDown, child: Text('Find Distance', maxLines: 1))),
+                Tab(child: FittedBox(fit: BoxFit.scaleDown, child: Text('Find Time', maxLines: 1))),
               ],
             ),
           ),
