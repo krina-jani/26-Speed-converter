@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../widgets/social_icons.dart';
 import 'privacy_policy_screen.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -8,16 +9,29 @@ class AboutScreen extends StatelessWidget {
   Future<void> _launchURL(BuildContext context, String urlString) async {
     final Uri uri = Uri.parse(urlString);
     try {
-      final bool launched = await launchUrl(
+      bool launched = await launchUrl(
         uri,
         mode: LaunchMode.externalApplication,
       );
+      if (!launched) {
+        launched = await launchUrl(
+          uri,
+          mode: LaunchMode.platformDefault,
+        );
+      }
       if (!launched && context.mounted) {
         _showSnackBar(context, 'Could not open link: $urlString');
       }
     } catch (e) {
       if (context.mounted) {
-        _showSnackBar(context, 'Unable to open link. Please try again.');
+        try {
+          final bool launched = await launchUrl(uri, mode: LaunchMode.platformDefault);
+          if (!launched) {
+            _showSnackBar(context, 'Unable to open link.');
+          }
+        } catch (_) {
+          _showSnackBar(context, 'Unable to open link.');
+        }
       }
     }
   }
@@ -145,13 +159,7 @@ class AboutScreen extends StatelessWidget {
 
             // Instagram Card
             _buildCardTile(
-              iconWidget: Image.network(
-                'https://cdn-icons-png.flaticon.com/512/174/174855.png',
-                width: 24,
-                height: 24,
-                errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.camera_alt, color: Colors.white, size: 22),
-              ),
+              iconWidget: const InstagramIcon(size: 24),
               iconBgColor: const Color(0xFFE1306C),
               title: 'Instagram',
               subtitle: 'Follow Emperor Smart Solutions',
@@ -167,15 +175,27 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
 
+            // Facebook Card
+            _buildCardTile(
+              iconWidget: const FacebookIcon(size: 24),
+              iconBgColor: const Color(0xFF1877F2),
+              title: 'Facebook',
+              subtitle: 'Follow Emperor Smart Solutions',
+              trailing: const Icon(
+                Icons.open_in_new,
+                color: Color(0xFF94A3B8),
+                size: 20,
+              ),
+              onTap: () => _launchURL(
+                context,
+                'https://www.facebook.com/emperorsmartsolutions',
+              ),
+            ),
+            const SizedBox(height: 12),
+
             // LinkedIn Card
             _buildCardTile(
-              iconWidget: Image.network(
-                'https://cdn-icons-png.flaticon.com/512/174/174857.png',
-                width: 24,
-                height: 24,
-                errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.work, color: Colors.white, size: 22),
-              ),
+              iconWidget: const LinkedInIcon(size: 24),
               iconBgColor: const Color(0xFF0A66C2),
               title: 'LinkedIn',
               subtitle: 'Follow Emperor Smart Solutions',

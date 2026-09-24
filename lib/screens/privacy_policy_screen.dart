@@ -160,7 +160,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // 13. Our Social Profiles Section with Working Instagram & LinkedIn Links
+            // 13. Our Social Profiles Section with Working Instagram, Facebook & LinkedIn Links
             _buildSectionHeader('13. Our Social Profiles'),
             const SizedBox(height: 10),
             
@@ -180,11 +180,48 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 ),
                 child: const Row(
                   children: [
-                    Icon(Icons.camera_alt, color: Color(0xFFE1306C), size: 20),
+                    InstagramIcon(size: 20),
                     SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         'Instagram: https://www.instagram.com/emperorsmartsolutions',
+                        style: TextStyle(
+                          color: Color(0xFF38BDF8),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.underline,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Icon(Icons.open_in_new, color: Color(0xFF38BDF8), size: 16),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            // Facebook Link Button
+            InkWell(
+              onTap: () => _launchURL(
+                context,
+                'https://www.facebook.com/emperorsmartsolutions',
+              ),
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1E293B),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFF334155)),
+                ),
+                child: const Row(
+                  children: [
+                    FacebookIcon(size: 20),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'Facebook: https://www.facebook.com/emperorsmartsolutions',
                         style: TextStyle(
                           color: Color(0xFF38BDF8),
                           fontSize: 13,
@@ -217,7 +254,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 ),
                 child: const Row(
                   children: [
-                    Icon(Icons.work, color: Color(0xFF0A66C2), size: 20),
+                    LinkedInIcon(size: 20),
                     SizedBox(width: 10),
                     Expanded(
                       child: Text(
