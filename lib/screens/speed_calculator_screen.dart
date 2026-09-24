@@ -210,25 +210,27 @@ class _SpeedCalculatorScreenState extends State<SpeedCalculatorScreen>
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Tab Bar Container
+        // Tab Bar Container with Whole-Box Blue Color Segment Highlight
         Container(
           color: const Color(0xFF0F172A),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           child: Container(
-            height: 46,
+            height: 48,
             decoration: BoxDecoration(
               color: const Color(0xFF1E293B),
-              borderRadius: BorderRadius.circular(25),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFF334155), width: 1),
             ),
             child: TabBar(
               controller: _tabController,
+              indicatorSize: TabBarIndicatorSize.tab, // Fills the entire segment box!
               indicator: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                color: const Color(0xFF2563EB), // Active blue tab
+                borderRadius: BorderRadius.circular(10),
+                color: const Color(0xFF2563EB), // Solid blue block for selected segment
               ),
               labelColor: Colors.white,
               unselectedLabelColor: const Color(0xFF94A3B8),
-              labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               tabs: const [
                 Tab(text: 'Find Speed'),
                 Tab(text: 'Find Distance'),
@@ -266,33 +268,21 @@ class _SpeedCalculatorScreenState extends State<SpeedCalculatorScreen>
           ),
           const SizedBox(height: 20),
 
-          // Distance Field
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 3,
-                child: _buildInputField(
-                  label: 'Distance',
-                  controller: _speedDistController,
-                  hint: 'e.g. 100',
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                flex: 2,
-                child: _buildDistanceDropdown(
-                  value: _speedDistUnit,
-                  onChanged: (val) {
-                    if (val != null) setState(() => _speedDistUnit = val);
-                  },
-                ),
-              ),
-            ],
+          // Labeled Input + Dropdown Row (Aligned perfectly on the same line)
+          _buildInputWithUnitRow(
+            label: 'Distance',
+            controller: _speedDistController,
+            hint: 'e.g. 100',
+            unitDropdown: _buildDistanceDropdown(
+              value: _speedDistUnit,
+              onChanged: (val) {
+                if (val != null) setState(() => _speedDistUnit = val);
+              },
+            ),
           ),
           const SizedBox(height: 16),
 
-          // Time Fields (Hours, Minutes, Seconds)
+          // Time Duration Input Fields
           const Text(
             'Time Duration',
             style: TextStyle(
@@ -328,7 +318,7 @@ class _SpeedCalculatorScreenState extends State<SpeedCalculatorScreen>
           ),
           const SizedBox(height: 16),
 
-          // Target Speed Unit
+          // Desired Speed Unit
           const Text(
             'Desired Speed Unit',
             style: TextStyle(
@@ -338,11 +328,14 @@ class _SpeedCalculatorScreenState extends State<SpeedCalculatorScreen>
             ),
           ),
           const SizedBox(height: 8),
-          _buildSpeedDropdown(
-            value: _targetSpeedUnit,
-            onChanged: (val) {
-              if (val != null) setState(() => _targetSpeedUnit = val);
-            },
+          SizedBox(
+            height: 48,
+            child: _buildSpeedDropdown(
+              value: _targetSpeedUnit,
+              onChanged: (val) {
+                if (val != null) setState(() => _targetSpeedUnit = val);
+              },
+            ),
           ),
 
           if (_speedError != null) ...[
@@ -383,33 +376,21 @@ class _SpeedCalculatorScreenState extends State<SpeedCalculatorScreen>
           ),
           const SizedBox(height: 20),
 
-          // Speed Field & Unit
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 3,
-                child: _buildInputField(
-                  label: 'Speed',
-                  controller: _distSpeedController,
-                  hint: 'e.g. 60',
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                flex: 2,
-                child: _buildSpeedDropdown(
-                  value: _distSpeedUnit,
-                  onChanged: (val) {
-                    if (val != null) setState(() => _distSpeedUnit = val);
-                  },
-                ),
-              ),
-            ],
+          // Speed Input + Dropdown Row (Aligned on the same line)
+          _buildInputWithUnitRow(
+            label: 'Speed',
+            controller: _distSpeedController,
+            hint: 'e.g. 60',
+            unitDropdown: _buildSpeedDropdown(
+              value: _distSpeedUnit,
+              onChanged: (val) {
+                if (val != null) setState(() => _distSpeedUnit = val);
+              },
+            ),
           ),
           const SizedBox(height: 16),
 
-          // Time Inputs
+          // Time Duration
           const Text(
             'Time Duration',
             style: TextStyle(
@@ -445,7 +426,7 @@ class _SpeedCalculatorScreenState extends State<SpeedCalculatorScreen>
           ),
           const SizedBox(height: 16),
 
-          // Target Distance Unit
+          // Desired Distance Unit
           const Text(
             'Desired Distance Unit',
             style: TextStyle(
@@ -455,11 +436,14 @@ class _SpeedCalculatorScreenState extends State<SpeedCalculatorScreen>
             ),
           ),
           const SizedBox(height: 8),
-          _buildDistanceDropdown(
-            value: _targetDistUnit,
-            onChanged: (val) {
-              if (val != null) setState(() => _targetDistUnit = val);
-            },
+          SizedBox(
+            height: 48,
+            child: _buildDistanceDropdown(
+              value: _targetDistUnit,
+              onChanged: (val) {
+                if (val != null) setState(() => _targetDistUnit = val);
+              },
+            ),
           ),
 
           if (_distError != null) ...[
@@ -500,55 +484,31 @@ class _SpeedCalculatorScreenState extends State<SpeedCalculatorScreen>
           ),
           const SizedBox(height: 20),
 
-          // Distance Field
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 3,
-                child: _buildInputField(
-                  label: 'Distance',
-                  controller: _timeDistController,
-                  hint: 'e.g. 120',
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                flex: 2,
-                child: _buildDistanceDropdown(
-                  value: _timeDistUnit,
-                  onChanged: (val) {
-                    if (val != null) setState(() => _timeDistUnit = val);
-                  },
-                ),
-              ),
-            ],
+          // Distance Field Row
+          _buildInputWithUnitRow(
+            label: 'Distance',
+            controller: _timeDistController,
+            hint: 'e.g. 120',
+            unitDropdown: _buildDistanceDropdown(
+              value: _timeDistUnit,
+              onChanged: (val) {
+                if (val != null) setState(() => _timeDistUnit = val);
+              },
+            ),
           ),
           const SizedBox(height: 16),
 
-          // Speed Field
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 3,
-                child: _buildInputField(
-                  label: 'Speed',
-                  controller: _timeSpeedController,
-                  hint: 'e.g. 60',
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                flex: 2,
-                child: _buildSpeedDropdown(
-                  value: _timeSpeedUnit,
-                  onChanged: (val) {
-                    if (val != null) setState(() => _timeSpeedUnit = val);
-                  },
-                ),
-              ),
-            ],
+          // Speed Field Row
+          _buildInputWithUnitRow(
+            label: 'Speed',
+            controller: _timeSpeedController,
+            hint: 'e.g. 60',
+            unitDropdown: _buildSpeedDropdown(
+              value: _timeSpeedUnit,
+              onChanged: (val) {
+                if (val != null) setState(() => _timeSpeedUnit = val);
+              },
+            ),
           ),
 
           if (_timeError != null) ...[
@@ -610,10 +570,12 @@ class _SpeedCalculatorScreenState extends State<SpeedCalculatorScreen>
     );
   }
 
-  Widget _buildInputField({
+  /// Unified Labeled Row for Input Field & Unit Dropdown in the Exact Same Horizontal Line
+  Widget _buildInputWithUnitRow({
     required String label,
     required TextEditingController controller,
     required String hint,
+    required Widget unitDropdown,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -627,24 +589,47 @@ class _SpeedCalculatorScreenState extends State<SpeedCalculatorScreen>
           ),
         ),
         const SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          decoration: InputDecoration(
-            hintText: hint,
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 3,
+              child: SizedBox(
+                height: 48,
+                child: TextField(
+                  controller: controller,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  decoration: InputDecoration(
+                    hintText: hint,
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Color(0xFF2563EB), width: 2),
+                    ),
+                  ),
+                ),
+              ),
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+            const SizedBox(width: 12),
+            Expanded(
+              flex: 2,
+              child: SizedBox(
+                height: 48,
+                child: unitDropdown,
+              ),
             ),
-          ),
+          ],
         ),
       ],
     );
@@ -662,18 +647,25 @@ class _SpeedCalculatorScreenState extends State<SpeedCalculatorScreen>
           style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
         ),
         const SizedBox(height: 4),
-        TextField(
-          controller: controller,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(vertical: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+        SizedBox(
+          height: 46,
+          child: TextField(
+            controller: controller,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: const EdgeInsets.symmetric(vertical: 10),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+              ),
             ),
           ),
         ),

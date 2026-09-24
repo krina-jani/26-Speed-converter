@@ -21,18 +21,22 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC), // Clean white/light gray background
+      backgroundColor: const Color(0xFFF8FAFC), // Clean light slate background
       appBar: AppBar(
         backgroundColor: const Color(0xFF0F172A), // Dark navy header
         elevation: 2,
         title: Row(
           children: [
             Container(
-              width: 32,
-              height: 32,
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(10),
                 color: const Color(0xFF1E293B),
+                border: Border.all(
+                  color: const Color(0xFF38BDF8).withValues(alpha: 0.5),
+                  width: 1.5,
+                ),
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
@@ -40,11 +44,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   'assets/icons/speedshift_logo.png',
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) =>
-                      const Icon(Icons.speed, color: Color(0xFF38BDF8), size: 20),
+                      const Icon(Icons.speed_rounded, color: Color(0xFF38BDF8), size: 24),
                 ),
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 12),
             const Text(
               'SpeedShift',
               style: TextStyle(
@@ -57,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
-          // Clear Information Icon for About Page
+          // Information Icon button for About screen
           IconButton(
             icon: const Icon(Icons.info_outline_rounded, color: Colors.white, size: 24),
             tooltip: 'About SpeedShift',
@@ -88,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
           currentIndex: _currentIndex,
           onTap: (index) {
             if (index == 2) {
-              // Tap on About tab directly opens About screen
+              // Tap on (i) info icon directly opens About screen
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const AboutScreen()),
@@ -115,9 +119,9 @@ class _HomeScreenState extends State<HomeScreen> {
               label: 'Converter',
             ),
             BottomNavigationBarViewItem(
-              icon: Icon(Icons.info_outline_rounded),
-              activeIcon: Icon(Icons.info_rounded),
-              label: 'ⓘ About',
+              icon: Icon(Icons.info_outline_rounded, size: 24),
+              activeIcon: Icon(Icons.info_rounded, size: 24),
+              label: '', // ONLY (i) icon, no text label as requested
             ),
           ],
         ),
