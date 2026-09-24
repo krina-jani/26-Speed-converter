@@ -1,7 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
+
+  Future<void> _launchURL(BuildContext context, String urlString) async {
+    final Uri uri = Uri.parse(urlString);
+    try {
+      final bool launched = await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+      if (!launched && context.mounted) {
+        _showSnackBar(context, 'Could not open link: $urlString');
+      }
+    } catch (e) {
+      if (context.mounted) {
+        _showSnackBar(context, 'Unable to open link.');
+      }
+    }
+  }
+
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: const Color(0xFF1E293B),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,14 +117,127 @@ class PrivacyPolicyScreen extends StatelessWidget {
               '11. Changes to This Privacy Policy',
               'We may update our Privacy Policy periodically. Any changes will be reflected with a revised Effective Date at the top of this screen.',
             ),
-            _buildSection(
-              '12. Contact Us',
-              'If you have any questions or suggestions about our Privacy Policy, please contact us at:\n\nEmperor Smart Solutions\nPhone: +91 63543 51080',
+            
+            // 12. Contact Us Section with Working Phone Link
+            _buildSectionHeader('12. Contact Us'),
+            const SizedBox(height: 6),
+            const Text(
+              'If you have any questions or suggestions about our Privacy Policy, please contact us at:\n\nEmperor Smart Solutions',
+              style: TextStyle(
+                color: Color(0xFF94A3B8),
+                fontSize: 14,
+                height: 1.5,
+              ),
             ),
-            _buildSection(
-              '13. Our Social Profiles',
-              'Instagram:\nhttps://www.instagram.com/emperorsmartsolutions?stkn=eng4aTNpcWZqbWE=\n\nLinkedIn:\nhttps://www.linkedin.com/company/emperor-smart-solutions/',
+            const SizedBox(height: 8),
+            InkWell(
+              onTap: () => _launchURL(context, 'tel:+916354351080'),
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1E293B),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFF334155)),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.phone, color: Color(0xFF10B981), size: 18),
+                    SizedBox(width: 8),
+                    Text(
+                      'Phone: +91 63543 51080',
+                      style: TextStyle(
+                        color: Color(0xFF38BDF8),
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
+            const SizedBox(height: 20),
+
+            // 13. Our Social Profiles Section with Working Instagram & LinkedIn Links
+            _buildSectionHeader('13. Our Social Profiles'),
+            const SizedBox(height: 10),
+            
+            // Instagram Link Button
+            InkWell(
+              onTap: () => _launchURL(
+                context,
+                'https://www.instagram.com/emperorsmartsolutions?stkn=eng4aTNpcWZqbWE=',
+              ),
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1E293B),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFF334155)),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.camera_alt, color: Color(0xFFE1306C), size: 20),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'Instagram: https://www.instagram.com/emperorsmartsolutions',
+                        style: TextStyle(
+                          color: Color(0xFF38BDF8),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.underline,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Icon(Icons.open_in_new, color: Color(0xFF38BDF8), size: 16),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            // LinkedIn Link Button
+            InkWell(
+              onTap: () => _launchURL(
+                context,
+                'https://www.linkedin.com/company/emperor-smart-solutions/',
+              ),
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1E293B),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFF334155)),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.work, color: Color(0xFF0A66C2), size: 20),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'LinkedIn: https://www.linkedin.com/company/emperor-smart-solutions/',
+                        style: TextStyle(
+                          color: Color(0xFF38BDF8),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.underline,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Icon(Icons.open_in_new, color: Color(0xFF38BDF8), size: 16),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+
             _buildSection(
               '14. Application-Specific Information',
               'SpeedShift is a speed conversion and speed-distance-time calculation tool developed by Emperor Smart Solutions for fast, offline calculations.',
@@ -115,6 +256,17 @@ class PrivacyPolicyScreen extends StatelessWidget {
             const SizedBox(height: 30),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
       ),
     );
   }
