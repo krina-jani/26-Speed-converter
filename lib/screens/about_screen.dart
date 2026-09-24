@@ -26,11 +26,13 @@ class AboutScreen extends StatelessWidget {
       if (context.mounted) {
         try {
           final bool launched = await launchUrl(uri, mode: LaunchMode.platformDefault);
-          if (!launched) {
+          if (!launched && context.mounted) {
             _showSnackBar(context, 'Unable to open link.');
           }
         } catch (_) {
-          _showSnackBar(context, 'Unable to open link.');
+          if (context.mounted) {
+            _showSnackBar(context, 'Unable to open link.');
+          }
         }
       }
     }

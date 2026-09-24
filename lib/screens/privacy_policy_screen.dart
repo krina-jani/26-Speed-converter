@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../widgets/social_icons.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
@@ -7,16 +8,31 @@ class PrivacyPolicyScreen extends StatelessWidget {
   Future<void> _launchURL(BuildContext context, String urlString) async {
     final Uri uri = Uri.parse(urlString);
     try {
-      final bool launched = await launchUrl(
+      bool launched = await launchUrl(
         uri,
         mode: LaunchMode.externalApplication,
       );
+      if (!launched) {
+        launched = await launchUrl(
+          uri,
+          mode: LaunchMode.platformDefault,
+        );
+      }
       if (!launched && context.mounted) {
         _showSnackBar(context, 'Could not open link: $urlString');
       }
     } catch (e) {
       if (context.mounted) {
-        _showSnackBar(context, 'Unable to open link.');
+        try {
+          final bool launched = await launchUrl(uri, mode: LaunchMode.platformDefault);
+          if (!launched && context.mounted) {
+            _showSnackBar(context, 'Unable to open link.');
+          }
+        } catch (_) {
+          if (context.mounted) {
+            _showSnackBar(context, 'Unable to open link.');
+          }
+        }
       }
     }
   }
