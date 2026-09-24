@@ -121,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
             BottomNavigationBarViewItem(
               icon: Icon(Icons.info_outline_rounded, size: 24),
               activeIcon: Icon(Icons.info_rounded, size: 24),
-              label: '', // ONLY (i) icon, no text label as requested
+              label: 'About',
             ),
           ],
         ),
